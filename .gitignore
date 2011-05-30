@@ -1,0 +1,14 @@
+nosetests.xml
+build/
+.env
+*.pyc
+*.swp
+*.swo
+*~
+*.db
+env_settings.py
+*~
+pip-log.txt
+.ropeproject
+.vagrant
+*.mp3

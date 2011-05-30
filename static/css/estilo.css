@@ -1,0 +1,61 @@
+@import url("reset.css");
+
+header { margin: 10px 20px; }
+h1 { font-family: Amaranth, sans-serif; font-size: 3em }
+h2 { font-family: Amaranth, sans-serif; font-size: 2em; display: none }
+h2 span { color: #2377d1 }
+
+.player {
+	width: 500px;
+	margin: 20px;
+	padding: 10px;
+	
+	border:solid 2px #bdbdbd;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	
+}
+
+.player .controls {
+	margin-bottom: 10px;	
+}
+
+.player .controls .button {
+	background: #EEE;
+	padding: 2px 5px; margin-right: 5px;	
+	
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	
+	cursor: pointer;
+}
+
+.player .seekbar { 
+	width: 500px;
+	height: 20px;
+	background: #EEE;
+	
+	margin: 5px 0;
+}
+
+.player .seekbar .progress {
+	background: #2377d1;
+	height: 20px;
+	width: 0%;
+}
+
+.player .volume-bar {
+	width: 100px;
+	height: 10px;
+	background: #EEE;
+	
+	margin: 5px 0;
+}
+
+.player .volume-bar .value {
+	background: #2377d1;
+	height: 10px;
+	width: 0%;
+}

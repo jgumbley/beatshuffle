@@ -1,0 +1,146 @@
+<!doctype html> 
+<html lang="pt-br">
+<head> 
+	<meta charset="utf-8" /> 
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1" > 
+  
+	<title dir="ltr">MP3 Player</title>
+	
+	<!-- CSS -->
+	<link href="http://fonts.googleapis.com/css?family=Amaranth" rel="stylesheet" />
+	<link rel="stylesheet" href="/static/css/estilo.css" /> 
+	
+	<!-- JS -->
+	<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="/static/js/libs/modernizr-1.7.min.js"></script> 
+</head>
+<body>
+
+<div class="wrapper">
+	<header>
+		<h1>HTML5 + CSS3 + jQuery MP3 Player</h1>
+		<h2>Tocando: <span></span></h2>
+	</header>
+	
+	<section>
+		<div class="player">		
+			<div class="controls">
+				<a class="button play">play</a>
+				<a class="button pause">pause</a>
+				
+				<a class="button previous">previous</a>
+				<a class="button next">next</a>		
+				
+				<a class="button stop">stop</a>	
+				
+				<a class="button mute">mute</a>
+				<a class="button unmute">unmute</a>	
+			</div>
+			
+			<div class="seekbar">
+				<div class="progress"><!--  --></div>
+			</div>
+			
+			<div class="volume-bar">
+				<div class="value" style="width: 75%;"></div>
+			</div>
+			
+			<div class="current-time">00:00</div>
+			<div class="duration">00:00</div>
+	</section>
+	
+	<script>
+	var musics = [
+		{
+			title: "{{tn}}",
+			artist: "{{tn}}",
+			album: "{{tn}}",
+			mp3: "/static/tnz/{{ tn }}.mp3"
+		},
+	];
+	</script>
+</div>
+	
+<!-- JS -->
+<script src="/static/js/libs/jquery-1.6.1.min.js"></script> 
+<script src="/static/js/libs/soundmanager/soundmanager2-nodebug.js"></script> 
+<script src="/static/js/jquery.player.js"></script>
+
+<script>
+soundManager.url = '/static/js/libs/soundmanager/';
+soundManager.flashVersion = 9;
+soundManager.useFlashBlock = false;
+
+soundManager.onload = function() {
+	$('.player').player({ 
+		playlist: musics,
+
+		playButton: '.button.play',
+		pauseButton: '.button.pause',
+		stopButton: '.button.stop',
+		
+		nextButton: '.button.next',
+		previousButton: '.button.previous',
+
+		// Após carregar o audio, alimenta o mostrador de duração da música
+		onLoad: function() {
+			$('.player .duration').text(millisecondsToTime(this.durationEstimate));
+
+			var song = $('.player').player('getSong');
+			$('header h2').show().children('span').text(song.artist + ' - ' + song.title);			
+		},
+
+		// Quando o som parar, limpa a barra de progresso e os timers
+		onStop: function() {
+			$('.player .progress').width(0);
+			$('.player .duration,.player .current-time').text('00:00');
+			
+			$('header h2 span').text('');
+		},
+
+		// Quando o som estiver tocando, alimenta a barra de progesso e timer de progresso
+		whilePlaying: function() {
+			var percent = (this.position * 100) / this.durationEstimate;
+
+			$('.player .progress').width(percent.toFixed(2) + '%');
+			$('.player .current-time').text(millisecondsToTime(this.position));
+		}
+	});
+};
+
+/**
+ * Converte milisegundos em um formato legível HH:MM:SS
+ */
+function millisecondsToTime(milliseconds) {
+	var seconds = Math.ceil(milliseconds / 1000),
+		minutes = 0,
+		hours = 0,
+		output = '';
+
+	hours = Math.round(seconds / 3600);
+	seconds = seconds % 3600;
+
+	minutes = Math.round(seconds / 60);
+	seconds = seconds % 60;
+
+	if (hours < 10)
+		hours = '0' + hours;
+	
+	if (minutes < 10)
+		minutes = '0' + minutes;
+	
+	if (seconds < 10)
+		seconds = '0' + seconds; 
+
+	if (parseInt(hours) > 0)
+		output += hours + ':';
+
+	output += minutes + ':';
+	output += seconds;
+	
+	return output;
+}
+</script>
+
+</body>
+</html>
