@@ -1,0 +1,8 @@
+<h1>Select!</h1>
+
+  {% for tnz in items %}
+  <div font-family="Courier">
+  <a href="/tag/{{ tnz.name | flatten }}/">{{ tnz.name }}</a>
+  </div>
+  {% endfor %}
+
