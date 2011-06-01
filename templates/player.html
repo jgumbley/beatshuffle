@@ -1,25 +1,17 @@
-<!doctype html> 
-<html lang="pt-br">
-<head> 
-	<meta charset="utf-8" /> 
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1" > 
-  
-	<title dir="ltr">MP3 Player</title>
-	
-	<!-- CSS -->
-	<link href="http://fonts.googleapis.com/css?family=Amaranth" rel="stylesheet" />
-	<link rel="stylesheet" href="/static/css/estilo.css" /> 
-	
+{% extends "layout.html" %}
+
+{% block includes %}
 	<!-- JS -->
 	<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 	<script src="/static/js/libs/modernizr-1.7.min.js"></script> 
-</head>
-<body>
+    <!-- JS -->
+    <script src="/static/js/libs/jquery-1.6.1.min.js"></script> 
+    <script src="/static/js/libs/soundmanager/soundmanager2-nodebug.js"></script> 
+    <script src="/static/js/jquery.player.js"></script>
 
-<div class="wrapper">
-	<header>
-		<h2> <span></span></h2>
-	</header>
+{% endblock %}
+
+{% block body %}
 	
 	<section>
 		<div class="player">		
@@ -27,17 +19,7 @@
 				<a class="button play">play</a>
 				<a class="button pause">pause</a>
 				
-				<a class="button previous">previous</a>
-				<a class="button next">next</a>		
-				
 				<a class="button stop">stop</a>	
-				
-				<a class="button mute">mute</a>
-				<a class="button unmute">unmute</a>	
-			</div>
-			
-			<div class="seekbar">
-				<div class="progress"><!--  --></div>
 			</div>
 			
 			<div class="volume-bar">
@@ -58,12 +40,7 @@
 		},
 	];
 	</script>
-</div>
 	
-<!-- JS -->
-<script src="/static/js/libs/jquery-1.6.1.min.js"></script> 
-<script src="/static/js/libs/soundmanager/soundmanager2-nodebug.js"></script> 
-<script src="/static/js/jquery.player.js"></script>
 
 <script>
 soundManager.url = '/static/js/libs/soundmanager/';
@@ -140,6 +117,4 @@ function millisecondsToTime(milliseconds) {
 	return output;
 }
 </script>
-
-</body>
-</html>
+{% endblock %}

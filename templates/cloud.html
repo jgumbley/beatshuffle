@@ -1,3 +1,6 @@
+{% extends "layout.html" %}
+
+{% block body %}
 <h1>Select!</h1>
 
   {% for tnz in items %}
@@ -5,4 +8,6 @@
   <a href="/tag/{{ tnz.name | flatten }}/">{{ tnz.name }}</a>
   </div>
   {% endfor %}
+
+{% endblock %}
 

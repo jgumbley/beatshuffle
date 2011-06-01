@@ -30,6 +30,7 @@ def tag(tag):
     t = db.session.query(Tag).filter(Tag.name==tagv).first()
     return render_template('index.html', name=t.name, tnzs=t.tnz)
 
+
 @app.template_filter('flatten')
 def flatten_filter(s):
     return s.replace(" ", "_")
@@ -39,5 +40,5 @@ def hydrate_filter(s):
 
 if __name__ == "__main__":
     app.debug = True
-    app.run(host="172.16.26.33")
+    app.run(host="172.16.26.33", port=80)
 
