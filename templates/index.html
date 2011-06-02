@@ -3,11 +3,11 @@
 {% block body %}
 <h1>{{ name }}</h1>
 
+<hr/>
 
   {% for tnz in tnzs %}
-  <div font-family="Courier">
-  <a href="/player/{{ tnz }}/">{{ tnz }}</a>
-  </div>
+  <a href="/player/{{ tnz }}/">mix</a> | 
   {% endfor %}
 
+<hr/>
 {% endblock %}

@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template
 from flask import jsonify
+from flask import redirect
 from flaskext.sqlalchemy import SQLAlchemy
 from persist import Mix, Tag
 
@@ -16,9 +17,17 @@ def index():
     return render_template('index.html', tnzs=tnz)
 
 @app.route("/")
+def root():
+    return redirect("/shuffle")
+
+@app.route("/shuffle")
 def genres():
     i = db.session.query(Tag).all()
-    return render_template('cloud.html', items=i)
+    return render_template('shuffle.html', items=i)
+
+@app.route("/about")
+def about():
+    return render_template('about.html' )
 
 @app.route("/player/<tn_hash>/")
 def player(tn_hash):
@@ -42,5 +51,5 @@ def hydrate_filter(s):
 
 if __name__ == "__main__":
     app.debug = True
-    app.run( port=80)
+    app.run(host="172.16.26.33", port=80)
 
