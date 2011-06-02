@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import render_template
+from flask import jsonify
 from flaskext.sqlalchemy import SQLAlchemy
 from persist import Mix, Tag
 
@@ -21,7 +22,8 @@ def genres():
 
 @app.route("/player/<tn_hash>/")
 def player(tn_hash):
-    return render_template('player.html', tn=tn_hash)
+    song = db.session.query(Mix).filter(Mix.hash==tn_hash).first()
+    return render_template('player.html', tn=tn_hash, song=song)
 
 @app.route("/tag/<tag>/")
 def tag(tag):
@@ -40,5 +42,5 @@ def hydrate_filter(s):
 
 if __name__ == "__main__":
     app.debug = True
-    app.run(host="172.16.26.33", port=80)
+    app.run( port=80)
 

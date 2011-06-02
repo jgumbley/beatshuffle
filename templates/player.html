@@ -29,8 +29,23 @@
 			<div class="current-time">00:00</div>
 			<div class="duration">00:00</div>
 	</section>
+
+
+    <section>
+
+    <ul>
+    {% for item in song.tags %}
+    <li><a href="/tag/{{ item.name }}">{{ item.name }}</a></li>
+    {% endfor %}
+    </ul>
 	
-	<script>
+    <input type="text" name="q" id="query" />
+    </section>
+
+{% endblock %}
+
+{% block scripts %}
+	<script type="text/JavaScript">
 	var musics = [
 		{
 			title: "{{tn}}",
@@ -39,10 +54,7 @@
 			mp3: "/static/tnz/{{ tn }}.mp3"
 		},
 	];
-	</script>
-	
 
-<script>
 soundManager.url = '/static/js/libs/soundmanager/';
 soundManager.flashVersion = 9;
 soundManager.useFlashBlock = false;
