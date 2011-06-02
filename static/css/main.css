@@ -6,6 +6,27 @@ body {
      
 }
 
+h1 {
+    line-height: 0.5;
+}
+
+ul {
+    line-height: 0.1;
+}
+
+hr {
+    height: 10px;
+    background-color: yellow;
+}
+
+div.controls {
+    font-size: 24px;
+    }
+
+div.current-time {
+    font-size: 72px;
+}
+
 a {
     color: yellow;
     text-decoration: none;
