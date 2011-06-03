@@ -17,6 +17,7 @@ ul {
 hr {
     height: 10px;
     background-color: yellow;
+    border: 0px;
 }
 
 div.footer {

@@ -26,10 +26,11 @@
 			<div class="current-time">00:00</div>
 	</section>
 
-
+    <hr/>
     <section>
 
-    <ul>
+    <p>twitter user: {{ user }}</p>
+<ul>
     {% for item in song.tags %}
     <li><a href="/tag/{{ item.name }}">{{ item.name }}</a></li>
     {% endfor %}
@@ -37,6 +38,7 @@
 	
     <input type="text" name="q" id="query" />
     </section>
+<hr/>
 
 {% endblock %}
 
@@ -66,7 +68,6 @@ soundManager.onload = function() {
 		nextButton: '.button.next',
 		previousButton: '.button.previous',
 
-		// Após carregar o audio, alimenta o mostrador de duração da música
 		onLoad: function() {
 			$('.player .duration').text(millisecondsToTime(this.durationEstimate));
 
@@ -74,7 +75,6 @@ soundManager.onload = function() {
 			$('header h2').show().children('span').text(song.artist + ' - ' + song.title);			
 		},
 
-		// Quando o som parar, limpa a barra de progresso e os timers
 		onStop: function() {
 			$('.player .progress').width(0);
 			$('.player .duration,.player .current-time').text('00:00');
@@ -82,7 +82,6 @@ soundManager.onload = function() {
 			$('header h2 span').text('');
 		},
 
-		// Quando o som estiver tocando, alimenta a barra de progesso e timer de progresso
 		whilePlaying: function() {
 			var percent = (this.position * 100) / this.durationEstimate;
 
@@ -92,9 +91,6 @@ soundManager.onload = function() {
 	});
 };
 
-/**
- * Converte milisegundos em um formato legível HH:MM:SS
- */
 function millisecondsToTime(milliseconds) {
 	var seconds = Math.ceil(milliseconds / 1000),
 		minutes = 0,
