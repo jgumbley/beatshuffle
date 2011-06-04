@@ -6,6 +6,7 @@
 	<script src="/static/js/libs/modernizr-1.7.min.js"></script> 
     <!-- JS -->
     <script src="/static/js/libs/jquery-1.6.1.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -13,19 +14,49 @@
 <h2>Retag</h2>
 <hr/>
     <section>
-
-    <p>twitter user: {{ user }}</p>
+    <p><img src="http://img.tweetimag.es/i/{{ user }}_b" /> {{ user }}</p>
 <ul>
     {% for item in song.tags %}
     <li><a href="/tag/{{ item.name }}">{{ item.name }}</a></li>
     {% endfor %}
     </ul>
 	
-    <input type="text" name="q" id="query" />
+    <input type="text" name="tags" id="tags" />
     </section>
 <hr/>
 
 {% endblock %}
 
 {% block scripts %}
+<script>
+	$(function() {
+		var availableTags = [
+			"ActionScript",
+			"AppleScript",
+			"Asp",
+			"BASIC",
+			"C",
+			"C++",
+			"Clojure",
+			"COBOL",
+			"ColdFusion",
+			"Erlang",
+			"Fortran",
+			"Groovy",
+			"Haskell",
+			"Java",
+			"JavaScript",
+			"Lisp",
+			"Perl",
+			"PHP",
+			"Python",
+			"Ruby",
+			"Scala",
+			"Scheme"
+		];
+		$( "#tags" ).autocomplete({
+			source: availableTags
+		});
+	});
+</script>
 {% endblock %}

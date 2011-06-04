@@ -37,4 +37,16 @@ a {
     text-decoration: none;
 }
 
+input[type="text"] {
+    font-family: 'Limelight', serif;
+    font-size: 48px;
+    color: yellow;
+    padding:3px;
+    background-color: #1a82f7;
+}
+
+li.ui-menu-item {
+    height: 48px;
+    background-color: #1a8200;
+}
 
