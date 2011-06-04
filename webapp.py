@@ -104,7 +104,19 @@ def tag(tag):
     t = db.session.query(Tag).filter(Tag.name==tagv).first()
     return render_template('index.html', name=t.name, tnzs=t.tnz)
 
+from flask import jsonify
 
+# api methods
+@app.route("/api/tags/")
+def list_tags():
+    list_of_tags = db.session.query(Tag.name).all()
+    ret = "[" 
+    for item in list_of_tags:
+        ret += '"' + item[0] + '", ' 
+    ret += "]"
+    return ret
+
+# url manipulation
 @app.template_filter('flatten')
 def flatten_filter(s):
     return s.replace(" ", "_")
@@ -112,6 +124,7 @@ def flatten_filter(s):
 def hydrate_filter(s):
     return s.replace("_", " ")
 
+# entry point
 if __name__ == "__main__":
     app.debug = True
     app.run(host="172.16.26.33", port=80)
