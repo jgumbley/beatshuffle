@@ -11,17 +11,20 @@
 
 {% block body %}
 
-<h2>Retag</h2>
+<p>Retag as <img src="http://img.tweetimag.es/i/{{ user }}_b" /> {{ user }}</p>
 <hr/>
-    <section>
-    <p><img src="http://img.tweetimag.es/i/{{ user }}_b" /> {{ user }}</p>
 <ul>
+    <section>
     {% for item in song.tags %}
-    <li><a href="/tag/{{ item.name }}">{{ item.name }}</a></li>
+    <li>
+        <a href="/tag/{{ item.name }}">{{ item.name }}</a>
+        <a class="bonzai" href="/rmtag/{{ song.hash }}/{{ item.name | flatten }}">[x]</a>
+    </li>
     {% endfor %}
     </ul>
-	
-    <input type="text" name="tags" id="tags" />
+    <form action="/addtag/{{ song.hash }}/">	
+        + <input type="text" name="tags" id="tags" />
+    </form>
     </section>
 <hr/>
 
@@ -55,7 +58,8 @@
 			"Scheme"
 		];
 		$( "#tags" ).autocomplete({
-			source: availableTags
+            source: availableTags,
+            delay: 0
 		});
 	});
 </script>

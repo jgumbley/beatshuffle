@@ -110,11 +110,12 @@ from flask import jsonify
 @app.route("/api/tags/")
 def list_tags():
     list_of_tags = db.session.query(Tag.name).all()
-    ret = "[" 
+    ret = [] 
     for item in list_of_tags:
-        ret += '"' + item[0] + '", ' 
-    ret += "]"
-    return ret
+        row = {}
+        row['value'] = item[0]
+        ret.append(row)
+    return jsonify(ret)
 
 # url manipulation
 @app.template_filter('flatten')

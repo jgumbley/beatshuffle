@@ -29,7 +29,7 @@ div.controls {
     }
 
 div.current-time {
-    font-size: 72px;
+    font-size: 126px;
 }
 
 a {
@@ -37,11 +37,18 @@ a {
     text-decoration: none;
 }
 
+a.bonzai {
+    font-size: 24px;
+    color: red;
+}
+
 input[type="text"] {
     font-family: 'Limelight', serif;
     font-size: 48px;
     color: yellow;
     padding:3px;
+    border-color: blue;
+    border-size: 2px;
     background-color: #1a82f7;
 }
 
