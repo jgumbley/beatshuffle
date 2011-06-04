@@ -16,7 +16,11 @@
 	<section>
 		<div class="player">		
 			<div class="controls">
-                <a class="button play">play</a> | <a class="button pause">pause</a> | <a href="/">shuffle</a> | <a class="button stop">rewind</a>	
+                <a class="button play">play</a> |
+                <a class="button pause">pause</a> |
+                <a href="/">shuffle</a> |
+                <a class="button stop">rewind</a> |	
+                <a href="/retag/{{ tn }}" target="_blank">retag</a>
 			</div>
 			
 			<div class="volume-bar">
@@ -27,18 +31,6 @@
 	</section>
 
     <hr/>
-    <section>
-
-    <p>twitter user: {{ user }}</p>
-<ul>
-    {% for item in song.tags %}
-    <li><a href="/tag/{{ item.name }}">{{ item.name }}</a></li>
-    {% endfor %}
-    </ul>
-	
-    <input type="text" name="q" id="query" />
-    </section>
-<hr/>
 
 {% endblock %}
 

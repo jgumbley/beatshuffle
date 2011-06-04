@@ -1,3 +1,4 @@
+from functools import wraps
 from flask import Flask
 from flask import render_template
 from flask import jsonify
@@ -6,6 +7,7 @@ from flask import session
 from flask import url_for
 from flask import request
 from flask import flash
+from flask import g
 from flaskext.sqlalchemy import SQLAlchemy
 from persist import Mix, Tag
 from flaskext.oauth import OAuth
@@ -32,6 +34,14 @@ twitter = oauth.remote_app('twitter',
 @twitter.tokengetter
 def get_twitter_token():
     return session.get('twitter_token')
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get('twitter_user') is None:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/login')
 def login():
@@ -78,8 +88,14 @@ def about():
 @app.route("/player/<tn_hash>/")
 def player(tn_hash):
     song = db.session.query(Mix).filter(Mix.hash==tn_hash).first()
+    return render_template('player.html', tn=tn_hash, song=song)
+
+@app.route("/retag/<tn_hash>/")
+@login_required
+def retag(tn_hash):
+    song = db.session.query(Mix).filter(Mix.hash==tn_hash).first()
     u = session['twitter_user']
-    return render_template('player.html', tn=tn_hash, song=song, user=u)
+    return render_template('retag.html', song=song, user=u)
 
 @app.route("/tag/<tag>/")
 def tag(tag):
