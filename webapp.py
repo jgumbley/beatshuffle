@@ -9,7 +9,7 @@ from flask import request
 from flask import flash
 from flask import g
 
-from flaskext.oauth import OAuth
+from auth import twitter, login_required
 
 from persist import get_tn_by_hash, get_all_tnz, get_all_tags, get_tag_by_name
 from persist import db, Mix, Tag
@@ -21,29 +21,9 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://tnz_layer:c0ns0le@localhost:5432/tnz'
 db.init_app(app)
 
-# OAuth config:
-oauth = OAuth()
-
-twitter = oauth.remote_app('twitter',
-    base_url='http://api.twitter.com/1/',
-    request_token_url='http://api.twitter.com/oauth/request_token',
-    access_token_url='http://api.twitter.com/oauth/access_token',
-    authorize_url='http://api.twitter.com/oauth/authenticate',
-    consumer_key='aMCIQI4nO4V1FDuGps8nRw',
-    consumer_secret='EI7t8s8nefbqlpx0xcKgbitiHwn3ydpTGCWIWUsgug'
-)
-
 @twitter.tokengetter
 def get_twitter_token():
     return session.get('twitter_token')
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get('twitter_user') is None:
-            return redirect(url_for('login', next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
 
 @app.route('/login')
 def login():
