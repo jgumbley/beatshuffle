@@ -1,4 +1,3 @@
-from functools import wraps
 from flask import Flask
 from flask import render_template
 from flask import jsonify
@@ -6,10 +5,8 @@ from flask import redirect
 from flask import session
 from flask import url_for
 from flask import request
-from flask import flash
-from flask import g
 
-from auth import twitter, login_required
+from auth import twitter, login_required, do_login, do_oauth_callback
 
 from persist import get_tn_by_hash, get_all_tnz, get_all_tags, get_tag_by_name
 from persist import db, Mix, Tag
@@ -21,31 +18,15 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://tnz_layer:c0ns0le@localhost:5432/tnz'
 db.init_app(app)
 
-@twitter.tokengetter
-def get_twitter_token():
-    return session.get('twitter_token')
-
+# Auth related web - delegate into auth module 
 @app.route('/login')
 def login():
-    return twitter.authorize(callback=url_for('oauth_authorized',
-        next=request.args.get('next') or request.referrer or None))
+    return do_login()
 
 @app.route('/oauth-authorized')
 @twitter.authorized_handler
 def oauth_authorized(resp):
-    next_url = request.args.get('next') or url_for('index')
-    if resp is None:
-        flash(u'You denied the request to sign in.')
-        return redirect(next_url)
-
-    session['twitter_token'] = (
-        resp['oauth_token'],
-        resp['oauth_token_secret']
-    )
-    session['twitter_user'] = resp['screen_name']
-
-    flash('You were signed in as %s' % resp['screen_name'])
-    return redirect(next_url)
+    return do_oauth_callback(resp)
 
 # web methods:
 
@@ -61,7 +42,7 @@ def root():
     return redirect("/shuffle")
 
 @app.route("/shuffle")
-def genres():
+def shuffle():
     i = get_all_tags()
     return render_template('shuffle.html', items=i)
 
@@ -114,8 +95,6 @@ def addtag(tn_hash):
     db.session.commit()
     return redirect(request.referrer)
     #return jsonify(song=song.hash, currtags=l, newtags=h, tag_to_add=to_add, as_user=u)
-
-from flask import jsonify
 
 # api methods
 @app.route("/api/tags/")
