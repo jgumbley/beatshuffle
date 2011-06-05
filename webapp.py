@@ -5,6 +5,7 @@ from flask import redirect
 from flask import session
 from flask import url_for
 from flask import request
+from flask import flash
 
 from auth import twitter, login_required, do_login, do_oauth_callback
 
@@ -67,34 +68,43 @@ def tag(tag):
     t = get_tag_by_name(hydrate_filter(tag))
     return render_template('index.html', name=t.name, tnzs=t.tnz)
 
+
+def rm_tag_from_song(user, song_hash, tag):
+    song = get_tn_by_hash(song_hash)
+    if len(song.tags) == 1:
+        flash("must have at least one tag")
+    else:
+        new_tags=[]
+        for t in song.tags:
+            if t.name in tag:
+                flash(t.name + " removed")
+            else:
+                new_tags.append(t)
+        song.tags = new_tags
+        db.session.merge(song)
+        db.session.commit()
+
+
 @app.route("/rmtag/<tn_hash>/<tag>/")
 @login_required
 def rmtag(tn_hash, tag):
-    song = get_tn_by_hash(tn_hash)
-    l = []
-    for gag in song.tags:
-        l.append(gag.name)
-    u = session['twitter_user']
-    #    return redirect(request.referrer)
-    return jsonify(song=song.hash, currtags=l, tag_to_rm=hydrate_filter(tag), as_user=u)
+    user = session['twitter_user']
+    rm_tag_from_song(user, tn_hash, tag)
+    return redirect(request.referrer)
+
+def add_tag_to_song(user, song_hash, tag):
+    song = get_tn_by_hash(song_hash)
+    song.add_tag(tag)
+    db.session.merge(song)
+    db.session.commit()
 
 @app.route("/addtag/<tn_hash>/")
 @login_required
 def addtag(tn_hash):
-    u = session['twitter_user']
-    song = get_tn_by_hash(tn_hash)
-    l = []
-    for tag in song.tags:
-        l.append(tag.name)
+    user = session['twitter_user']
     to_add = request.args['tags']
-    song.add_tag(to_add)
-    h = []
-    for rag in song.tags:
-        h.append(rag.name)
-    db.session.merge(song)
-    db.session.commit()
+    add_tag_to_song(user, tn_hash, to_add)
     return redirect(request.referrer)
-    #return jsonify(song=song.hash, currtags=l, newtags=h, tag_to_add=to_add, as_user=u)
 
 # api methods
 @app.route("/api/tags/")

@@ -9,12 +9,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
 {% endblock %}
 
-{% block body %}
+{% block title %}
 
 <p>Retag as <img src="http://img.tweetimag.es/i/{{ user }}_b" /> {{ user }}</p>
 <hr/>
-<ul>
+
+{% endblock %}
+
+{% block body %}
+
     <section>
+    <ul>
     {% for item in song.tags %}
     <li>
         <a href="/tag/{{ item.name }}">{{ item.name }}</a>
