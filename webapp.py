@@ -8,8 +8,11 @@ from flask import url_for
 from flask import request
 from flask import flash
 from flask import g
-from persist import db, Mix, Tag
+
 from flaskext.oauth import OAuth
+
+from persist import get_tn_by_hash, get_all_tnz, get_all_tags, get_tag_by_name
+from persist import db, Mix, Tag
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -17,23 +20,6 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 # sqlalchemy config:
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://tnz_layer:c0ns0le@localhost:5432/tnz'
 db.init_app(app)
-
-# DAO module level functions
-def get_tn_by_hash(tn_hash, db):
-    """This is a module level function, akin to a DAO
-    """
-    return db.session.query(Mix).filter(Mix.hash==tn_hash).first()
-
-def get_all_tnz(db):
-    """Returns all mixed or the empty list
-    """
-    return db.session.query(Mix).all()
-
-def get_all_tags(db):
-    return db.session.query(Tag).all()
-
-def get_tag_by_name(db, tag):
-    return db.session.query(Tag).filter(Tag.name==tag).first()
 
 # OAuth config:
 oauth = OAuth()
@@ -87,7 +73,7 @@ def oauth_authorized(resp):
 def index():
     """all - will likely become stats
     """
-    tnz = get_all_tnz(db)
+    tnz = get_all_tnz()
     return render_template('index.html', tnzs=tnz)
 
 @app.route("/")
@@ -96,7 +82,7 @@ def root():
 
 @app.route("/shuffle")
 def genres():
-    i = get_all_tags(db)
+    i = get_all_tags()
     return render_template('shuffle.html', items=i)
 
 @app.route("/about")
@@ -105,25 +91,25 @@ def about():
 
 @app.route("/player/<tn_hash>/")
 def player(tn_hash):
-    song = get_tn_by_hash(tn_hash, db)
+    song = get_tn_by_hash(tn_hash)
     return render_template('player.html', tn=tn_hash, song=song)
 
 @app.route("/retag/<tn_hash>/")
 @login_required
 def retag(tn_hash):
-    song = get_tn_by_hash(tn_hash, db)
+    song = get_tn_by_hash(tn_hash)
     u = session['twitter_user']
     return render_template('retag.html', song=song, user=u)
 
 @app.route("/tag/<tag>/")
 def tag(tag):
-    t = get_tag_by_name(db, hydrate_filter(tag))
+    t = get_tag_by_name(hydrate_filter(tag))
     return render_template('index.html', name=t.name, tnzs=t.tnz)
 
 @app.route("/rmtag/<tn_hash>/<tag>/")
 @login_required
 def rmtag(tn_hash, tag):
-    song = get_tn_by_hash(tn_hash, db)
+    song = get_tn_by_hash(tn_hash)
     l = []
     for gag in song.tags:
         l.append(gag.name)
@@ -135,7 +121,7 @@ def rmtag(tn_hash, tag):
 @login_required
 def addtag(tn_hash):
     u = session['twitter_user']
-    song = get_tn_by_hash(tn_hash, db)
+    song = get_tn_by_hash(tn_hash)
     l = []
     for tag in song.tags:
         l.append(tag.name)

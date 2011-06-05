@@ -13,6 +13,23 @@ meta = MetaData()
 #engine = create_engine('postgresql://tnz_layer:c0ns0le@localhost:5432/tnz')
 #Session=sessionmaker(bind=engine)
 
+# DAO module level functions
+def get_tn_by_hash(tn_hash):
+    """This is a module level function, akin to a DAO
+    """
+    return db.session.query(Mix).filter(Mix.hash==tn_hash).first()
+
+def get_all_tnz():
+    """Returns all mixed or the empty list
+    """
+    return db.session.query(Mix).all()
+
+def get_all_tags():
+    return db.session.query(Tag).all()
+
+def get_tag_by_name(tag):
+    return db.session.query(Tag).filter(Tag.name==tag).first()
+
 mix_table = Table(
         'tn', meta,
         Column('hash', String(length=None),  primary_key=True, nullable=False),
