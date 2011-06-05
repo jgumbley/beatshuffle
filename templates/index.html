@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<h1>{{ name }}</h1>
+<h1><a href="/shuffle"><<</a>{{ name }}</h1>
 
 <hr/>
 
   {% for tnz in tnzs %}
-  <a href="/player/{{ tnz }}/">mix</a> | 
+  <a href="/player/{{ tnz }}/">play!</a> | 
   {% endfor %}
 
 <hr/>
