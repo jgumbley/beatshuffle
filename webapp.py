@@ -19,6 +19,23 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://tnz_layer:c0ns0le@localhost:5432/tnz'
 db = SQLAlchemy(app)
 
+# DAO module level functions
+def get_tn_by_hash(tn_hash, db):
+    """This is a module level function, akin to a DAO
+    """
+    return db.session.query(Mix).filter(Mix.hash==tn_hash).first()
+
+def get_all_tnz(db):
+    """Returns all mixed or the empty list
+    """
+    return db.session.query(Mix).all()
+
+def get_all_tags(db):
+    return db.session.query(Tag).all()
+
+def get_tag_by_name(db, tag):
+    return db.session.query(Tag).filter(Tag.name==tag).first()
+
 # OAuth config:
 oauth = OAuth()
 
@@ -69,7 +86,9 @@ def oauth_authorized(resp):
 
 @app.route("/all")
 def index():
-    tnz = db.session.query(Mix).all()
+    """all - will likely become stats
+    """
+    tnz = get_all_tnz(db)
     return render_template('index.html', tnzs=tnz)
 
 @app.route("/")
@@ -78,7 +97,7 @@ def root():
 
 @app.route("/shuffle")
 def genres():
-    i = db.session.query(Tag).all()
+    i = get_all_tags(db)
     return render_template('shuffle.html', items=i)
 
 @app.route("/about")
@@ -87,22 +106,42 @@ def about():
 
 @app.route("/player/<tn_hash>/")
 def player(tn_hash):
-    song = db.session.query(Mix).filter(Mix.hash==tn_hash).first()
+    song = get_tn_by_hash(tn_hash, db)
     return render_template('player.html', tn=tn_hash, song=song)
 
 @app.route("/retag/<tn_hash>/")
 @login_required
 def retag(tn_hash):
-    song = db.session.query(Mix).filter(Mix.hash==tn_hash).first()
+    song = get_tn_by_hash(tn_hash, db)
     u = session['twitter_user']
     return render_template('retag.html', song=song, user=u)
 
 @app.route("/tag/<tag>/")
 def tag(tag):
-    tagv = hydrate_filter(tag)
-    #t = db.session.query(Mix).filter(Mix.tags.contains(tagv)).all()
-    t = db.session.query(Tag).filter(Tag.name==tagv).first()
+    t = get_tag_by_name(db, hydrate_filter(tag))
     return render_template('index.html', name=t.name, tnzs=t.tnz)
+
+@app.route("/rmtag/<tn_hash>/<tag>/")
+@login_required
+def rmtag(tn_hash, tag):
+    song = get_tn_by_hash(tn_hash, db)
+    l = []
+    for gag in song.tags:
+        l.append(gag.name)
+    u = session['twitter_user']
+    #    return redirect(request.referrer)
+    return jsonify(song=song.hash, currtags=l, tag_to_rm=hydrate_filter(tag), as_user=u)
+
+@app.route("/addtag/<tn_hash>/")
+@login_required
+def addtag(tn_hash):
+    u = session['twitter_user']
+    song = get_tn_by_hash(tn_hash, db)
+    l = []
+    for tag in song.tags:
+        l.append(tag.name)
+    to_add = request.args['tags']
+    return jsonify(song=song.hash, currtags=l, tag_to_add=to_add, as_user=u)
 
 from flask import jsonify
 
