@@ -1,0 +1,19 @@
+                    ~ BeatShuffle.com ~
+    A tool for playing and categorising mix-tape recordings.
+
+    /provision
+        vagrant scripts to setup servers
+    /static
+        js, css etc.
+    /static/tnz
+        where the audio is kept, not under source control
+    /database
+        migration scripts for the postgres database
+    /templates
+        flask templates
+    /webapp.py
+        flask dispatcher
+    /auth.py
+        twitter authentication
+    /persist.py
+        persistence / business logic layer
