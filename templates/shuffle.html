@@ -3,11 +3,12 @@
 {% block body %}
 <h1>Shuffle!</h1>
 <hr/>
-  {% for tnz in items %}
   <ul>
+  {% for tnz in items %}
       <li><a href="/tag/{{ tnz.name | flatten }}/">{{ tnz.name }}</a></li>
-  </ul>
   {% endfor %}
+  </ul>
+
 <hr/>
 {% endblock %}
 

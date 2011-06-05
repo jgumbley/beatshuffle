@@ -8,8 +8,7 @@ from flask import url_for
 from flask import request
 from flask import flash
 from flask import g
-from flaskext.sqlalchemy import SQLAlchemy
-from persist import Mix, Tag
+from persist import db, Mix, Tag
 from flaskext.oauth import OAuth
 
 app = Flask(__name__)
@@ -17,7 +16,7 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 # sqlalchemy config:
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://tnz_layer:c0ns0le@localhost:5432/tnz'
-db = SQLAlchemy(app)
+db.init_app(app)
 
 # DAO module level functions
 def get_tn_by_hash(tn_hash, db):
@@ -141,7 +140,14 @@ def addtag(tn_hash):
     for tag in song.tags:
         l.append(tag.name)
     to_add = request.args['tags']
-    return jsonify(song=song.hash, currtags=l, tag_to_add=to_add, as_user=u)
+    song.add_tag(to_add)
+    h = []
+    for rag in song.tags:
+        h.append(rag.name)
+    db.session.merge(song)
+    db.session.commit()
+    return redirect(request.referrer)
+    #return jsonify(song=song.hash, currtags=l, newtags=h, tag_to_add=to_add, as_user=u)
 
 from flask import jsonify
 

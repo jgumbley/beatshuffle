@@ -3,12 +3,15 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime, Met
 from sqlalchemy.orm import sessionmaker, mapper, relation 
 from datetime import datetime
 from sqlalchemy.sql import select
+from flaskext.sqlalchemy import SQLAlchemy
 
 # http://forge.mysql.com/wiki/TagSchema
 
+db = SQLAlchemy()
+
 meta = MetaData()
-engine = create_engine('postgresql://tnz_layer:c0ns0le@localhost:5432/tnz')
-Session=sessionmaker(bind=engine)
+#engine = create_engine('postgresql://tnz_layer:c0ns0le@localhost:5432/tnz')
+#Session=sessionmaker(bind=engine)
 
 mix_table = Table(
         'tn', meta,
@@ -37,7 +40,7 @@ class Mix(object):
                 )
 
     def _find_or_create_tag(self, tag):
-        q = session.query(Tag).filter_by(name=tag)
+        q = db.session.query(Tag).filter_by(name=tag)
         t = q.first()
         if not(t):
             t = Tag(tag)
@@ -64,9 +67,9 @@ mapper(Mix, mix_table, properties={
         'tags': relation(Tag, secondary=link_table, backref='tnz')
         })
 
-session = Session()
+#session = Session()
 
-def add_mix(mix):
-    session.add(mix)
-    session.commit()
+#def add_mix(mix):
+#    session.add(mix)
+#    session.commit()
     
